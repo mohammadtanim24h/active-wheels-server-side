@@ -17,6 +17,7 @@ async function run() {
     try {
         await client.connect();
         const partCollection = client.db("activeWheels").collection("parts");
+        const orderCollection = client.db("activeWheels").collection("orders");
 
         // get all parts
         app.get("/parts", async (req, res) => {
@@ -24,12 +25,19 @@ async function run() {
             res.send(parts);
         })
 
+        // get specific part info
         app.get("/part/:id", async (req, res) => {
             const id = req.params.id;
-            console.log(req.params);
             const query = {_id: ObjectId(id)};
             const part = await partCollection.findOne(query);
             res.send(part);
+        })
+
+        // add order to db
+        app.post("/part", async (req, res) => {
+            const orderInfo = req.body;
+            const result = await orderCollection.insertOne(orderInfo);
+            res.send(result);
         })
     }
     finally {
