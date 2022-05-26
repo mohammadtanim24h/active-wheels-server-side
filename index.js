@@ -19,7 +19,21 @@ async function run() {
         const partCollection = client.db("activeWheels").collection("parts");
         const orderCollection = client.db("activeWheels").collection("orders");
         const reviewCollection = client.db("activeWheels").collection("reviews");
-        
+        const userCollection = client.db("activeWheels").collection("users");
+
+
+        // add user in db
+        app.put("/user/:email", async (req, res) => {
+            const email = req.params.email;
+            const filter = {email};
+            const user = req.body;
+            const options = { upsert: true };
+            const updateDoc = {
+                $set: user,
+            };
+            const result = await userCollection.updateOne(filter, updateDoc, options);
+            res.send(result);
+        })
 
         // get all parts
         app.get("/parts", async (req, res) => {
