@@ -34,10 +34,18 @@ async function run() {
         })
 
         // add order to db
-        app.post("/part", async (req, res) => {
+        app.post("/order", async (req, res) => {
             const orderInfo = req.body;
             const result = await orderCollection.insertOne(orderInfo);
             res.send(result);
+        })
+
+        // get specific orders with email
+        app.get("/order/:email", async (req, res) => {
+            const email = req.params.email;
+            const query = {email};
+            const orders = await orderCollection.find(query).toArray();
+            res.send(orders)
         })
 
         // update part quantity
