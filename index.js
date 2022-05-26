@@ -18,6 +18,8 @@ async function run() {
         await client.connect();
         const partCollection = client.db("activeWheels").collection("parts");
         const orderCollection = client.db("activeWheels").collection("orders");
+        const reviewCollection = client.db("activeWheels").collection("reviews");
+        
 
         // get all parts
         app.get("/parts", async (req, res) => {
@@ -67,6 +69,12 @@ async function run() {
             };
             const result = await partCollection.updateOne(filter, updatedPart, options);
             res.send(result);
+        })
+
+        // get all reviews
+        app.get("/reviews", async (req, res) => {
+            const reviews = await reviewCollection.find({}).toArray();
+            res.send(reviews);
         })
     }
     finally {
