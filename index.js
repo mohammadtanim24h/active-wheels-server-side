@@ -53,6 +53,14 @@ async function run() {
             res.send({result, token});
         })
 
+        // check admin role
+        app.get("/check-admin/:email", verifyJWT, async (req, res) => {
+            const email = req.params.email;
+            const user = await userCollection.findOne({email});
+            const isAdmin = user?.role === 'admin';
+            res.send({admin: isAdmin});
+        })
+
         // get all parts
         app.get("/parts", async (req, res) => {
             const parts = await partCollection.find({}).toArray();
