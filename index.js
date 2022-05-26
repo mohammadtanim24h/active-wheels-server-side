@@ -53,6 +53,12 @@ async function run() {
             res.send({result, token});
         })
 
+        // get all users from db
+        app.get("/users", verifyJWT, async (req, res) => {
+            const users = await userCollection.find({}).toArray();
+            res.send(users);
+        })
+
         // check admin role
         app.get("/check-admin/:email", verifyJWT, async (req, res) => {
             const email = req.params.email;
