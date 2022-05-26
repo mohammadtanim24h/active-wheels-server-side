@@ -39,6 +39,18 @@ async function run() {
         const userCollection = client.db("activeWheels").collection("users");
 
 
+        // verify admin
+        const verifyAdmin = async (req, res, next) => {
+            const requester = req.decoded.email;
+            const requesterAccount = await userCollection.findOne({email: requester});
+            if(requesterAccount.role === 'admin') {
+                next();
+            }
+            else {
+                return res.status(403).send({message: "Forbidden Access"});
+            }
+        }
+
         // add user in db
         app.put("/user/:email", async (req, res) => {
             const email = req.params.email;
@@ -54,7 +66,7 @@ async function run() {
         })
 
         // make admin
-        app.put("/make-admin/:email", verifyJWT, async (req, res) => {
+        app.put("/make-admin/:email", verifyJWT, verifyAdmin, async (req, res) => {
             const email = req.params.email;
             const filter = {email};
             const updateDoc = {
