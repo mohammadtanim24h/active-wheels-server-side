@@ -53,6 +53,17 @@ async function run() {
             res.send({result, token});
         })
 
+        // make admin
+        app.put("/make-admin/:email", verifyJWT, async (req, res) => {
+            const email = req.params.email;
+            const filter = {email};
+            const updateDoc = {
+                $set: {role: 'admin'},
+            };
+            const result = await userCollection.updateOne(filter, updateDoc);
+            res.send(result);
+        })
+
         // get all users from db
         app.get("/users", verifyJWT, async (req, res) => {
             const users = await userCollection.find({}).toArray();
