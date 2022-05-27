@@ -41,8 +41,8 @@ async function run() {
 
         // verify admin
         const verifyAdmin = async (req, res, next) => {
-            const requester = req.decoded.email;
-            const requesterAccount = await userCollection.findOne({email: requester});
+            const requesterEmail = req.decoded.email;
+            const requesterAccount = await userCollection.findOne({email: requesterEmail});
             if(requesterAccount.role === 'admin') {
                 next();
             }
@@ -102,6 +102,14 @@ async function run() {
             const query = {_id: ObjectId(id)};
             const part = await partCollection.findOne(query);
             res.send(part);
+        })
+
+        // delete a part
+        app.delete("/part/:id", verifyJWT, verifyAdmin, async (req, res) => {
+            const id = req.params.id;
+            const query = {_id: ObjectId(id)};
+            const result = await partCollection.deleteOne(query);
+            res.send(result);
         })
 
         // add part to db
