@@ -65,6 +65,18 @@ async function run() {
             res.send({result, token});
         })
 
+        // update user info
+        app.put("/update-user-info/:email", verifyJWT, async (req, res) => {
+            const email = req.params.email;
+            const filter = {email};
+            const userInfo = req.body;
+            const updateDoc = {
+                $set: userInfo,
+            };
+            const result = await userCollection.updateOne(filter, updateDoc);
+            res.send(result);
+        })
+
         // make admin
         app.put("/make-admin/:email", verifyJWT, verifyAdmin, async (req, res) => {
             const email = req.params.email;
