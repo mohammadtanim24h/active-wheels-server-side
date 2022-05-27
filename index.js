@@ -65,6 +65,14 @@ async function run() {
             res.send({result, token});
         })
 
+        // get specific user info with email 
+        app.get("/user/:email", async (req, res) => {
+            const email = req.params.email;
+            const query = {email};
+            const user = await userCollection.findOne(query);
+            res.send(user);
+        })
+
         // update user info
         app.put("/update-user-info/:email", verifyJWT, async (req, res) => {
             const email = req.params.email;
