@@ -162,6 +162,12 @@ async function run() {
             res.send(result);
         })
 
+        // get all orders from db
+        app.get("/orders", verifyJWT, verifyAdmin, async (req, res) => {
+            const orders = await orderCollection.find({}).toArray();
+            res.send(orders);
+        })
+
         // get specific orders with user email
         app.get("/order/:email", verifyJWT, async (req, res) => {
             const email = req.params.email;
