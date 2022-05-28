@@ -202,6 +202,17 @@ async function run() {
             res.send(result);
         })
 
+        // change status of order
+        app.patch("/change-order-status/:id", verifyJWT, verifyAdmin, async (req, res) => {
+            const id = req.params.id;
+            const filter = {_id: ObjectId(id)};
+            const updateDoc = {
+                $set: {status: "approved"},
+            };
+            const result = await orderCollection.updateOne(filter, updateDoc);
+            res.send(result);
+        })
+
         // delete a order
         app.delete("/order/:id", verifyJWT, async (req, res) => {
             const id = req.params.id;
