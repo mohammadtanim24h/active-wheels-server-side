@@ -184,6 +184,18 @@ async function run() {
             res.send(order);
         })
 
+        // update order after payment
+        app.patch("/order/:id", verifyJWT, async (req, res) => {
+            const id = req.params.id;
+            const filter = {_id: ObjectId(id)};
+            const payment = req.body;
+            const updateDoc = {
+                $set: payment,
+            };
+            const result = await orderCollection.updateOne(filter, updateDoc);
+            res.send(result);
+        })
+
         // delete a order
         app.delete("/order/:id", async (req, res) => {
             const id = req.params.id;
